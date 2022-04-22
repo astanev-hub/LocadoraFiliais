@@ -6,8 +6,10 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 import com.stanev.domain.*;
 
@@ -20,8 +22,6 @@ public class LocadoraFiliaisApplication {
     	
     	Carro[] frota1 = new Carro[5];
     	Carro[] frota2 = new Carro[4];
-
-        //Carro modeloCarro = new Carro("ABC-1234", "Toyota", "SW4", "Cinza", 250, true);
 
         frota1[0] = new Carro("ABC-000" + 0, "Toyota", "Cinza Chumbo", "SW" + 0, 100, true);
         frota1[1] = new Carro("ABC-000" + 1, "Toyota", "Cinza Chumbo", "SW" + 1, 200, true);
@@ -68,11 +68,11 @@ public class LocadoraFiliaisApplication {
             emprestarCarro(cliente, frota1[frotaAtual], logEmprestimos1);
             frotaAtual++;
             if (frotaAtual == 4) frotaAtual = 0;
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
         //Limpar lista de espera da filial 1, uma vez que todos já estão com carros
         filaEspera1.clear();
@@ -84,11 +84,11 @@ public class LocadoraFiliaisApplication {
         	emprestarCarro(cliente, frota2[frotaAtual], logEmprestimos2);
             frotaAtual++;
             if (frotaAtual == 3) frotaAtual = 0;
-        	try {
-        		Thread.sleep(1000);
-        	} catch (InterruptedException e) {
-        		e.printStackTrace();
-        	}
+//        	try {
+//        		Thread.sleep(1000);
+//        	} catch (InterruptedException e) {
+//        		e.printStackTrace();
+//        	}
         }
         //Limpar lista de espera da filial 2, uma vez que todos já estão com carros
         filaEspera2.clear();
@@ -155,22 +155,22 @@ public class LocadoraFiliaisApplication {
     }
 
     public static void listaDeUmaFilialEspecifica(LinkedList<Filial> filiais,int numeroFilial) {
-        System.out.println("\nLISTA DO LOG DA FILIAL 1");
-        for (Filial f: filiais) {
-        	if (f.filial == numeroFilial) {
-        		System.out.println(f.logEmprestimos);
-        	}
-        }
+        System.out.println("\nLISTA DO LOG DA FILIAL " + numeroFilial);
+        
+        List<Stack<String>> filtroLogFilial =  filiais.stream()
+        		.filter(f -> f.filial == numeroFilial)
+        		.map(f -> f.logEmprestimos).collect(Collectors.toList());
+       
+        System.out.println(filtroLogFilial);       
     }
 
     public static void quantidadeDeCarrosPorFilial(LinkedList<Filial> filiais,int numeroFilial) {
-        System.out.println("\nQUANTIDADE TOTAL DE CARROS DA FILIAL 1");
+        System.out.println("\nQUANTIDADE TOTAL DE CARROS DA FILIAL " + numeroFilial);
         for (Filial f: filiais) {
         	if (f.filial == numeroFilial) {
         		System.out.println(f.getFrota().length);
         	}
-        }    
-    	
+        }   
     }
 
     public static void quantidadeTotalDeCarrosDasFiliais(LinkedList<Filial> filiais) {
@@ -179,7 +179,7 @@ public class LocadoraFiliaisApplication {
         for (Filial f: filiais) {
         	totalDeCarros+= f.getFrota().length;
         }    
-   		System.out.println(totalDeCarros);    	
+   		System.out.println(totalDeCarros);        
     }
 
 	public static void	quantidadeTotalDeCarrosAlugadosDasFiliais(LinkedList<Filial> filiais) {
@@ -212,5 +212,4 @@ public class LocadoraFiliaisApplication {
 		}    
 		System.out.println(totalDasDiarias);		
 	}
-
 }
